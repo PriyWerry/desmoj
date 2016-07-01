@@ -1,7 +1,7 @@
 package desmoj.core.simulator;
 
 /**
- * An object that formats TimeInstant and TimeString objects.
+ * An object that formats <code>TimeInstant</code> and <code>TimeSpan</code> objects.
  * 
  * @version DESMO-J, Ver. 2.5.1d copyright (c) 2015
  * @author Felix Klueckmann
