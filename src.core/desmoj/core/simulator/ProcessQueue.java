@@ -802,6 +802,40 @@ public class ProcessQueue<P extends SimProcess> extends QueueBased implements It
 
 	}
 	
+	/**
+	 * Returns the waiting time of a process present in the queue.
+	 * If the process given is not queued, <code>null</code> will be returned.
+	 * 
+	 * @param p
+	 *            P : The process whose waiting time is looked for
+	 *            
+	 * @return TimeSpan : The waiting time of the process or <code>null</code>.
+	 */
+	public TimeSpan getCurrentWaitTime(P p) {
+
+		if (p == null) {
+			sendWarning("Cannot query waiting time!", "Queue : "
+					+ getName() + " Method:  void getCurrentWaitTime(SimProcess p)",
+					"The Process 'p' given as parameter is a null reference!",
+					"Check to always have valid references when querying"
+							+ "waiting durations");
+			return null; // no proper parameter
+		}
+		TimeInstant i = _ql.timemap.get(p);
+		
+		if (i == null) {
+			sendWarning("Cannot query waiting time!", "Queue : "
+					+ getName() + " Method:  void getCurrentWaitTime(SimProcess p)",
+					"The Process 'p' ("+p.getQuotedName()+") given as parameter is not enqueued in this "
+							+ "queue!",
+					"Make sure the process is inside the queue you want it to "
+							+ "be queried.");
+			return null; // not enqueued here
+		}
+
+		return TimeOperations.diff(this.presentTime(), i);
+	}
+	
     /**
      * Removes all processes from the Queue. Has no effect on empty queues.
      */

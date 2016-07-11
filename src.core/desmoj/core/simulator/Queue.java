@@ -762,6 +762,46 @@ public class Queue<E extends Entity> extends QueueBased implements Iterable<E>{
 
 	}
 	
+	/**
+	 * Returns the waiting time of an entity present in the queue.
+	 * If the entity given is not queued, <code>null</code> will be returned.
+	 * 
+	 * @param e
+	 *            Entity : The entity whose waiting time is looked for
+	 *            
+	 * @return TimeSpan : The waiting time of the entity or <code>null</code>.
+	 */
+	public TimeSpan getCurrentWaitTime(Entity e) {
+
+		if (e == null) {
+			sendWarning("Cannot query waiting time!", "Queue : "
+					+ getName() + " Method:  void getCurrentWaitTime(Entity e)",
+					"The Entity 'e' given as parameter is a null reference!",
+					"Check to always have valid references when querying"
+							+ "waiting durations");
+			return null; // no proper parameter
+		}
+		TimeInstant i = _ql.timemap.get(e);
+		
+		if (i == null) {
+			sendWarning("Cannot query waiting time!", "Queue : "
+					+ getName() + " Method:  void getCurrentWaitTime(Entity e)",
+					"The Entity 'e' ("+e.getQuotedName()+") given as parameter is not enqueued in this "
+							+ "queue!",
+					"Make sure the entity is inside the queue you want it to "
+							+ "be queried.");
+			return null; // not enqueued here
+		}
+
+		if (currentlySendDebugNotes()) {
+			sendDebugNote("remove " + e.getQuotedName() + "<br>"
+					+ _ql.toString());
+		}
+
+		return TimeOperations.diff(this.presentTime(), i);
+	}
+	
+	
     /**
      * Removes all entities from the Queue. Has no effect on empty queues.
      */

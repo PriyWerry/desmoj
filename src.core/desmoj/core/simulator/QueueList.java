@@ -50,7 +50,7 @@ public abstract class QueueList<E extends Entity> implements PropertyChangeListe
 	 * Uses the java.util.WeakHashMap functionalities to link entities with their entry time.
 	 */
 	protected java.util.HashMap<E,TimeInstant> timemap;
-
+	
 	/**
 	 * Should return <code>true</code> if the given <code>Entity</code> is
 	 * contained in the queue; <code>false</code> otherwise.
