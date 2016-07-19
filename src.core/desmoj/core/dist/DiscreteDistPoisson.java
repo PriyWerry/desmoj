@@ -113,6 +113,9 @@ public class DiscreteDistPoisson extends DiscreteDist<Long> {
 	           p *= (1 - randomGenerator.nextDouble());
 	    } while (p > l);
 	    
+        if (this.currentlySendTraceNotes())
+            this.traceLastSample(Long.toString(k - 1));
+        
 	    return k-1;
 	}
 	
