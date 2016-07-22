@@ -41,7 +41,7 @@ public class ManufacturingModel extends Model {
   /**
    * The queue of leaving blank parts
    */
-  private /*static  bj*/ Queue blankPartQueue;
+  private Queue<BlankPart> blankPartQueue;
 
   /**
    * The statistic object that counts the throughput of blank parts

@@ -109,6 +109,7 @@ public class DiscreteDistBinomial extends DiscreteDist<Long> {
 			try {
 				e = new Entry(i, bdist.cumulativeProbability(i));
 				valueList.add(e);
+				System.out.println(i + " " + bdist.cumulativeProbability(i));
 
 			} catch (MathException e1) {
 				sendWarning(
@@ -120,6 +121,8 @@ public class DiscreteDistBinomial extends DiscreteDist<Long> {
 						"Make sure the probabilty is set between 0 and 1 and the amount of trials is positive");
 			}
 		}
+		e = new Entry(this.amount, 1.0);
+		valueList.add(e);
 	}
 
 	/**
