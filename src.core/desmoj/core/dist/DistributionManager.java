@@ -66,10 +66,13 @@ public class DistributionManager extends NamedObject {
 		super(name + "_DistributionManager"); // create the NamedObject
 
 		_antitheticMode = false; // set antithetic mode to false by default
-		_seedGenerator = new LinearCongruentialRandomGenerator(seed); // create
-																		// seed
-																		// generator
-		_currentDefaultGenerator = LinearCongruentialRandomGenerator.class;
+		
+		_seedGenerator = new MersenneTwisterRandomGenerator(seed); // create seed generator
+		_currentDefaultGenerator = MersenneTwisterRandomGenerator.class;
+		
+		//_seedGenerator = new LinearCongruentialRandomGenerator(seed); // create seed generator
+     	//_currentDefaultGenerator = LinearCongruentialRandomGenerator.class;
+		
 		_distributions = new java.util.ArrayList<Distribution>(); // init List
 																	// for dist
 		

@@ -50,13 +50,27 @@ public class SortedMapEventList extends EventList {
         /**
          * Add the given {@link EventNote} to the end of the linked list.
          */
+        public void addAtEnd_old(EventNote newNote) {
+
+        }
+        
+        /**
+         * Add the given {@link EventNote} to the end of the linked list.
+         */
         public void addAtEnd(EventNote newNote) {
-            if (next == null) {
-                assert this.note.compareTo(newNote) == 0;
-                next = new EventNoteWrapper(newNote);
-            } else {
-                next.addAtEnd(newNote);
-            }
+        	
+//          if (next == null) {
+//              assert this.note.compareTo(newNote) == 0;
+//              next = new EventNoteWrapper(newNote);
+//          } else {
+//              next.addAtEnd(newNote);
+//          }
+        	
+        	EventNoteWrapper w = this;
+        	while (w.next != null) w = w.next;
+            assert w.note.compareTo(newNote) == 0;
+            w.next = new EventNoteWrapper(newNote);
+
         }
 
         /**

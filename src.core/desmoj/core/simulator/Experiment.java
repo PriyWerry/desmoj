@@ -640,7 +640,7 @@ public class Experiment extends NamedObject {
 
         // building the scheduler: prepare event list...
         // (for efficiency reasons, we use the TreeList-based implementation)
-        EventList eventList = new SortedMapEventList();
+        EventList eventList = new SortedMapEventList(); // new EventTreeList(); 
 
         // create the scheduler (and clock)
         clientScheduler = createScheduler(name, eventList);
