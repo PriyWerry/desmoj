@@ -220,5 +220,15 @@ public class RandomizingEventTreeList extends EventTreeList {
 		}
 		return lastIndex - 1;
 	}
+	
+	/**
+	 * Returns if the event-list processes concurrent Events in random order or
+	 * not.
+	 * 
+	 * @return boolean: <code>true</code> since random order used if time and pririty equal
+	 */
+	public boolean isRandomizingConcurrentEvents() {
+		return true;
+	}
 
 } /* end of class RandomizingEventTreeList */

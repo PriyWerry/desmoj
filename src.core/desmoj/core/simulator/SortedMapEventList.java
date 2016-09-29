@@ -46,13 +46,6 @@ public class SortedMapEventList extends EventList {
             this.note = newNote;
             this.next = next;
         }
-
-        /**
-         * Add the given {@link EventNote} to the end of the linked list.
-         */
-        public void addAtEnd_old(EventNote newNote) {
-
-        }
         
         /**
          * Add the given {@link EventNote} to the end of the linked list.
@@ -434,5 +427,14 @@ public class SortedMapEventList extends EventList {
             note.getEvent().removeEventNote(note);      // remove EventNote
         }        
     }
-
+    
+	/**
+	 * Returns if the event-list processes concurrent Events in random order or
+	 * not.
+	 * 
+	 * @return boolean: <code>false</code> since no randomization
+	 */
+	public boolean isRandomizingConcurrentEvents() {
+		return false;
+	}
 }

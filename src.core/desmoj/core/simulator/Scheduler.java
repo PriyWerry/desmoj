@@ -97,13 +97,6 @@ public class Scheduler extends NamedObject {
 	private Schedulable _currentSchedulable;
 
 	/**
-	 * Flag indicating if the event-list will process concurrent Events in
-	 * random order or not. Default is not (<code>false</code>). (Modification
-	 * by Ruth Meyer, 11/2001)
-	 */
-	private boolean _randomizingConcurrentEvents = false;
-
-	/**
 	 * The execution speed rate. Default is zero (as-fast-as-possible).
 	 * (Modification by Felix Klueckmann, 05/2009)
 	 */
@@ -322,7 +315,7 @@ public class Scheduler extends NamedObject {
 	 * @author Ruth Meyer
 	 */
 	public boolean isRandomizingConcurrentEvents() {
-		return this._randomizingConcurrentEvents;
+		return evList.isRandomizingConcurrentEvents();
 	}
 
 	/**
@@ -2549,31 +2542,28 @@ public class Scheduler extends NamedObject {
 	}
 
 	/**
-	 * Sets the flag indicating if the event-list processes concurrent Events in
-	 * random order or not. If a change occurred the event-list has to be
-	 * changed accordingly.
+	 * Switches to a different event list.
 	 * 
-	 * @param randomizing
-	 *            boolean :<code>true</code> forces random order,
-	 *            <code>false</code> forces "linear" order
+	 * @param newEventList
+	 *            EventList : the new event list
 	 * @author Ruth Meyer
 	 */
-	protected void setRandomizingConcurrentEvents(boolean randomizing) {
+	protected void switchEventList(EventList newEventList) {
+
 		// nothing new?
-		if (this._randomizingConcurrentEvents == randomizing) {
+		if (this.evList == newEventList) {
 			return; // just keep everything as is
 		}
+
 		// ok, we have to change the event-list (oh bother!)
-		this._randomizingConcurrentEvents = randomizing;
-		EventList newList = randomizing ? new RandomizingEventTreeList() : new SortedMapEventList();
 
 		// copy old list into new list
 		EventNote note = this.evList.firstNote();
 		while (note != null) {
-			newList.insert(note);
+			newEventList.insert(note);
 			note = this.evList.nextNote(note);
 		}
-		this.evList = newList;
+		this.evList = newEventList;
 	}
 
 	/**

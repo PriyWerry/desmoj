@@ -14,6 +14,7 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.strands.Strand;
 import co.paralleluniverse.strands.SuspendableRunnable;
 import desmoj.core.dist.DistributionManager;
+import desmoj.core.dist.LinearCongruentialRandomGenerator;
 import desmoj.core.exception.DESMOJException;
 import desmoj.core.report.DebugNote;
 import desmoj.core.report.ErrorMessage;
@@ -643,7 +644,7 @@ public class Experiment extends NamedObject {
         EventList eventList = new SortedMapEventList(); // new EventTreeList(); 
 
         // create the scheduler (and clock)
-        clientScheduler = createScheduler(name, eventList);
+        clientScheduler = new Scheduler(this, name, eventList);
 
         // create a resource database and tell it that it belongs to this
         // experiment
@@ -652,18 +653,6 @@ public class Experiment extends NamedObject {
         // set status to first valid value - initialized, but not connected
         _status = INITIALIZED;
     }
-	
-	/**
-	 * Creates a scheduler for this experiment.
-	 * 
-	 * @param name
-	 *            experiment name
-	 * @return a new scheduler
-	 */
-	protected Scheduler createScheduler(String name, EventList evl) {
-		Scheduler s = new Scheduler(this, name, evl);
-		return s;
-	}
 
 	/**
 	 * Adds a messagereceiver for debugnotes to the experiment. Whenever a model
@@ -2012,21 +2001,19 @@ public class Experiment extends NamedObject {
 	}
 
 	/**
-	 * Determines if the event-list processes concurrent Events in random order
-	 * or not. Default is not, i.e. when a new experiment is constructed, the
-	 * event-list is set to "linear" order. Note: If you want the event-list to
-	 * randomize concurrent Events you should call this method BEFORE scheduling
-	 * any events. Otherwise any connections between events established via
-	 * scheduleBefore() or scheduleAfter() are lost. So it's a good idea to call
-	 * this method only once and right after constructing the experiment.
+	 * Switches event-list processes concurrent Events in random order
+	 * or not. 
 	 * 
 	 * @param randomizing
 	 *            boolean :<code>true</code> forces random order,
 	 *            <code>false</code> forces "linear" order
 	 * @author Ruth Meyer
+	 * @deprecated 
+	 * 			 Prefer to use <code>setEventList(...)</code>, permitting
+	 *           to set a concrete event list type, either ordered or random  
 	 */
 	public void randomizeConcurrentEvents(boolean randomizing) {
-		clientScheduler.setRandomizingConcurrentEvents(randomizing);
+		setEventList(randomizing ? RandomizingEventTreeList.class : SortedMapEventList.class);
 	}
 
 	/**
@@ -2111,6 +2098,59 @@ public class Experiment extends NamedObject {
 									+ " desmoj.core.dist.UniformRandomGenerator.",
 							"Make sure to use a non-abstract class that implements the interface"
 									+ " desmoj.core.dist.UniformRandomGenerator.");
+		}
+	}
+	
+	/**
+	 * Sets the underlying event list to be used be the experiment.
+	 * Entries already present in the current event list (if any) will be copied across.
+	 * 
+	 * @see desmoj.core.simulator.EventTreeList, FIFO order
+	 * @see desmoj.core.simulator.SortedMapEventList, FIFO order
+	 * @see desmoj.core.simulator.RandominzingEventTreeList, random order
+	 * 
+	 * @param eventList
+	 *            Class : The event list class to be used
+	 */
+	public void setEventList(
+			Class<? extends desmoj.core.simulator.EventList> eventList) {
+
+		boolean classValid = true;
+
+		// Verify the class provided is not abstract
+		if ((eventList == null 
+				|| (eventList.getModifiers() & java.lang.reflect.Modifier.ABSTRACT) > 0
+				|| (eventList.getModifiers() & java.lang.reflect.Modifier.INTERFACE) > 0))
+			classValid = false;
+
+		EventList el = null; 
+		if (classValid) {
+			try {
+				el = eventList.newInstance(); // default RandomGenerator
+			} catch (InstantiationException ex) {
+			} catch (IllegalAccessException ex) {
+			}
+		}
+
+		// Update the event list in use...
+		if (el != null) {
+
+			this.clientScheduler.switchEventList(el);
+
+		// ...or otherwise return an error
+		} else {
+
+			this
+					.sendWarning(
+							"Invalid event list classs given! Method call ignored!",
+							"Experiment '"
+									+ getName()
+									+ "', Method 'setEventList(Class eventList)'",
+							"The class provided '"
+									+ eventList.getSimpleName()
+									+ "' is abstract or no subclass of desmoj.core.simulator.EventList.",
+							"Make sure to use a non-abstract class that inherits from"
+									+ " desmoj.core.simulator.EventList.");
 		}
 	}
 

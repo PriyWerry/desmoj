@@ -54,7 +54,7 @@ public class EventTreeList extends EventList {
 	 * Constructs an empty event-list.
 	 */
 	EventTreeList() {
-
+		
 		// create event-list
 		eTreeList = new TreeList();
 
@@ -569,6 +569,16 @@ public class EventTreeList extends EventList {
 		return textBuffer.toString();
 		// return String representation of StringBuffer
 
+	}
+	
+	/**
+	 * Returns if the event-list processes concurrent Events in random order or
+	 * not.
+	 * 
+	 * @return boolean: <code>false</code> since no randomization
+	 */
+	public boolean isRandomizingConcurrentEvents() {
+		return false;
 	}
 
 }

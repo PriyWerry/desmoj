@@ -151,4 +151,14 @@ public abstract class EventList {
 	 * @return The removed note, or null if the list was empty.
 	 */
 	abstract EventNote removeFirst();
+	
+	/**
+	 * Returns if the event-list processes concurrent Events in random order or
+	 * not.
+	 * 
+	 * @return boolean: <code>true</code> if concurrent Events are randomized,
+	 *         <code>false</code> otherwise
+	 * @author Ruth Meyer
+	 */
+	abstract boolean isRandomizingConcurrentEvents();
 }
