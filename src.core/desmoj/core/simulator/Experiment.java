@@ -640,8 +640,7 @@ public class Experiment extends NamedObject {
             TimeOperations.setTimeFormatter(formatter, true);
 
         // building the scheduler: prepare event list...
-        // (for efficiency reasons, we use the TreeList-based implementation)
-        EventList eventList = new SortedMapEventList(); // new EventTreeList(); 
+        EventList eventList = new EventTreeList(); // new SortedMapEventList(); 
 
         // create the scheduler (and clock)
         clientScheduler = new Scheduler(this, name, eventList);
